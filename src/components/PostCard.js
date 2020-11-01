@@ -5,7 +5,6 @@ import { Card, Button, Text, Avatar } from "react-native-elements";
 import { AntDesign } from "@expo/vector-icons";
 
 const PostCard = ({content,props}) => {
-  console.log(props)
   return (
     <Card>
       <View
@@ -36,9 +35,11 @@ const PostCard = ({content,props}) => {
           icon={<AntDesign name="like2" size={24} color="black" />}
         />
         <Button type="solid" title="Comment"
-        // onPress={function (){
-        //   props.navigation.navigate("Comment")
-        // }}
+        onPress={function (){
+          let postId=content.id
+          //console.log(postId)
+          props.navigation.navigate("Comment",postId)
+        }}
          />
       </View>
     </Card>
