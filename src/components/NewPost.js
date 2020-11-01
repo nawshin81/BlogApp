@@ -38,7 +38,7 @@ const NewPost = ({ user }) => {
           };
           storeDataJSON("postId"+id,currentPost)
           setpostBody("")
-          // input.current.clear();
+          input.current.clear();
         }}
 
       />
