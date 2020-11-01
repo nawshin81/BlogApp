@@ -42,8 +42,4 @@ const NewComment = ({ postDetails, user }) => {
   );
 };
 
-const styles = StyleSheet.create({
-  cardStyle: {},
-});
-
 export default NewComment;

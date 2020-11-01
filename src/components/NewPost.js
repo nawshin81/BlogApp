@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { View } from "react-native";
 import { Card, Button, Input } from "react-native-elements";
-import { MaterialCommunityIcons, AntDesign } from "@expo/vector-icons";
+import { MaterialCommunityIcons} from "@expo/vector-icons";
 import moment from "moment";
 import { storeDataJSON} from "../functions/AsyncStorageFunctions";
 
@@ -9,11 +8,9 @@ function CurrentDate() {
   var date = new moment().format("DD/MM/YYYY");
   return date;
 }
-// function PostId() {
-//   var id = Math.floor(Math.random() * 100000);
-//   return id;
-// }
+
 const NewPost = ({ user }) => {
+  const input = React.createRef();
   const [postBody, setpostBody] = useState("");
   return (
     <Card>
@@ -25,13 +22,14 @@ const NewPost = ({ user }) => {
         onChangeText={function (currentInput) {
           setpostBody(currentInput);
         }}
+        ref={input}
+        multiline={true}
       />
       <Button
         title="Post"
         type="outline"
         onPress={function () {
-          var id = Math.floor(Math.random() * 200
-          );
+          var id = Math.floor(Math.random() * 200);
           let currentPost = {
             author: user.name,
             date: CurrentDate(),
@@ -39,8 +37,10 @@ const NewPost = ({ user }) => {
             id: "postId" + id,
           };
           storeDataJSON("postId"+id,currentPost)
-          //console.log(currentPost)
+          setpostBody("")
+          // input.current.clear();
         }}
+
       />
     </Card>
   );

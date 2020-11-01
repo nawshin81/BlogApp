@@ -24,7 +24,7 @@ const PostCard = ({content,props}) => {
         </Text>
       </View>
       <Text style={{ fontStyle: "italic" }}>{content.date}</Text>
-      <Text style={{paddingVertical: 10,}}>
+      <Text style={{paddingVertical: 10,fontSize:20}}>
         {content.post}
       </Text>
       <Card.Divider />
@@ -37,7 +37,6 @@ const PostCard = ({content,props}) => {
         <Button type="solid" title="Comment"
         onPress={function (){
           let postId=content.id
-          //console.log(postId)
           props.navigation.navigate("Comment",postId)
         }}
          />

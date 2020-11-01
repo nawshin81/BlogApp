@@ -4,7 +4,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 
-import NotificationScreen from "./src/screens/Notification";
+import NotificationScreen from "./src/screens/NotificationScreen";
 import HomeScreen from "./src/screens/HomeScreen";
 import SignUpScreen from "./src/screens/SignUpScreen";
 import SignInScreen from "./src/screens/SignInScreen";
