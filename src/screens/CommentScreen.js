@@ -5,38 +5,51 @@ import { AuthContext } from "../providers/AuthProvider";
 import HeaderHome from "../components/HeaderHome";
 import NewComment from "../components/NewComment";
 import CommentCard from "../components/CommentCard";
-import { getDataJSON } from "../functions/AsyncStorageFunctions";
+import * as firebase from "firebase";
+import "firebase/firestore";
 
 const CommentScreen = ({ navigation, route }) => {
-  let postId = route.params;
+  let postId = route.params.post;
   const [allcomments, setallcomments] = useState([]);
   const [postDetails, setpostDetails] = useState({});
 
   const getpostdetails = async () => {
-    let postDetails = await getDataJSON(postId);
-    if (postDetails != null) {
-      setpostDetails(postDetails);
-    } else {
-      console.log("no post");
-    }
-  };
-
-  const getComments = async () => {
-    let keys = await AsyncStorage.getAllKeys();
-    let comments = [];
-    if (keys != null) {
-      for (let key of keys) {
-        if (key.startsWith("commentId")) {
-          let comment = await getDataJSON(key);
-          comments.push(comment);
-        }
+    firebase
+    .firestore()
+    .collection("posts")
+    .doc(postId)
+    .get()
+    .then(function(doc) {
+      if (doc.exists) {
+        setpostDetails(doc.data())
+         console.log(doc.data());
+      } else {
+          console.log("No such post!");
       }
-      setallcomments(comments);
-    } else {
-      console.log("No keys");
-    }
+  }).catch(function(error) {
+      console.log(error);
+  });
   };
-
+//console.log(postDetails);
+  const getComments = async () => {
+    firebase
+    .firestore()
+    .collection("comments")
+    .onSnapshot((snapshot)=>{
+      let temp_comments=[]
+      snapshot.forEach((doc)=>{
+        temp_comments.push( {
+            id:doc.id,
+            data:doc.data()
+          } )
+      })
+      setallcomments(temp_comments)
+      ,function(error) {
+        alert(error)
+    }
+    })
+  };
+//console.log(allcomments)
   useEffect(() => {
     getpostdetails();
   }, []);
@@ -69,19 +82,19 @@ const CommentScreen = ({ navigation, route }) => {
       </View>
       <Text style={{ fontStyle: "italic" }}>{postDetails.date}</Text>
       <Text style={{paddingVertical: 10,fontSize:20}}>
-        {postDetails.post}
+        {postDetails.body}
       </Text>
       <Card.Divider />
       </Card>
-          <NewComment postDetails={postDetails} user={auth.CurrentUser.name}/>
+          <NewComment postDetails={postDetails} postId={postId} user={auth.CurrentUser.displayName}/>
           <FlatList 
           data={allcomments}
           renderItem={function({item}){
-            
-              if(postDetails.id==item.postId){
+            //console.log(item.postId)
+              if(postId==item.data.postId){
                 return(
                 <CommentCard 
-              content={item}/>)
+              content={item.data}/>)
               }
               
             

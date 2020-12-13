@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
 import { Card, Button, Input } from "react-native-elements";
-import { storeDataJSON } from "../functions/AsyncStorageFunctions";
-import NotificationFunction from "../functions/NotificationFunction";
-const NewComment = ({ postDetails, user }) => {
+import * as firebase from "firebase";
+import "firebase/firestore";
+
+const NewComment = ({ postDetails, postId, user }) => {
   const input = React.createRef();
   const [comment, setcomment] = useState("");
   return (
@@ -19,16 +20,19 @@ const NewComment = ({ postDetails, user }) => {
               title="Comment"
               type="outline"
               onPress={function () {
-                var id = Math.floor(Math.random() * 200);
-                let currentComment = {
-                  postId: postDetails.id,
-                  comment: comment,
-                  author: user,
-                  receiver: postDetails.author,
-                  commentId: "commentId" + id,
-                };
-                storeDataJSON("commentId" + id, currentComment);
-                NotificationFunction(currentComment)
+                firebase
+                  .firestore()
+                  .collection("comments")
+                  .add({
+                    postId: postId,
+                    comment: comment,
+                    author: user,
+                    receiver: postDetails.author,
+                  })
+                  .then(() => {})
+                  .catch((error) => {
+                    alert(error);
+                  });
                 setcomment("");
                 input.current.clear();
               }}

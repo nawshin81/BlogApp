@@ -38,15 +38,18 @@ const NewPost = ({ user }) => {
             likes:[],
             comments:[],
           })
-          .then(()=>{
+          .then((doc)=>{
             setloading(false)
-            alert("Post created successfully")
-            //clearinput.current.clear();
-          })
-          .catch((error)=>{
+            alert(doc.id)
+          }),(error)=>{
             setloading(false)
             alert(error);
-          })
+          }
+          // .catch((error)=>{
+          //   setloading(false)
+          //   alert(error);
+          // })
+          clearinput.current.clear();
         }}
 
       />

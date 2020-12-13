@@ -58,6 +58,7 @@ const HomeScreen = (props) => {
                 author={item.data.author}
                 title={item.id}
                 body={item.data.body}
+                navigation={props.navigation}
                 />);
             }}
             keyExtractor={(item, index) => index.toString()}
