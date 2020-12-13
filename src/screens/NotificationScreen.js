@@ -2,18 +2,28 @@ import React, { useEffect, useState } from "react";
 import { View, StyleSheet, AsyncStorage,FlatList } from "react-native";
 import { AuthContext } from "../providers/AuthProvider";
 import HeaderHome from "../components/HeaderHome";
-import { getDataJSON } from "../functions/AsyncStorageFunctions";
 import NotificationCard from "../components/NotificationCard";
+import * as firebase from "firebase";
+import "firebase/firestore";
 
 const NotificationScreen = (props) => {
   let[notification,setnotification]=useState([])
+
   const getNotification=async()=>{
-    let notice=await getDataJSON('notification')
-    if(notice!=null){
-      setnotification(notice)
-    }
-    else{
-      console.log('No notification')
+    firebase
+    .firestore()
+    .collection('comments')
+    .onSnapshot((querySnapshot)=>{
+      let allNots=[]
+      querySnapshot.forEach((doc)=>{
+        allNots.push({
+          id:doc.id,
+          data:doc.data(),
+        });
+      });
+      setnotification(allNots)
+    }),function(error){
+      alert(error)
     }
   }
 
@@ -29,10 +39,10 @@ const NotificationScreen = (props) => {
               <FlatList 
               data={notification}
               renderItem={function({item}){
-                if(item.receiver==auth.CurrentUser.name){
+                if(item.data.receiver==auth.CurrentUser.displayName){
                   return(
                     <NotificationCard 
-                    content={item}
+                    content={item.data}
                     />
                   )
                 }
