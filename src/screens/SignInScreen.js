@@ -4,11 +4,16 @@ import { Input, Button, Card } from "react-native-elements";
 import { Zocial, Fontisto, FontAwesome } from "@expo/vector-icons";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { AuthContext } from "../providers/AuthProvider";
-import {getDataJSON} from "../functions/AsyncStorageFunctions";
+import * as firebase from "firebase";
+import Loading from '../components/Loading';
 
 const SignInScreen = (props) => {
   const [Email, setEmail] = useState("");
   const [Password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  if (isLoading) {
+    return <Loading />;
+  } else {
   return (
     <AuthContext.Consumer>
       {(auth) => (
@@ -36,15 +41,20 @@ const SignInScreen = (props) => {
               icon={<SimpleLineIcons name="login" size={24} color="black" />}
               title="   Sign In"
               type="outline"
-              onPress={async function () {
-                let UserData = await getDataJSON(Email);
-                if (UserData.password== Password) {
-                  auth.setIsLoggedIn(true);
-                  auth.setCurrentUser(UserData);
-                } else {
-                  alert("Login Failed");
-                  console.log(UserData);
-                }
+              onPress={() => {
+                setIsLoading(true);
+                firebase
+                  .auth()
+                  .signInWithEmailAndPassword(Email, Password)
+                  .then((userCreds) => {
+                  setIsLoading(false);
+                    auth.setIsLoggedIn(true);
+                    auth.setCurrentUser(userCreds.user);
+                  })
+                  .catch((error) => {
+                    setIsLoading(false);
+                    alert(error);
+                  });
               }}
               
             />
@@ -64,6 +74,7 @@ const SignInScreen = (props) => {
     </AuthContext.Consumer>
   );
 };
+}
 
 const styles = StyleSheet.create({
   viewStyle: {

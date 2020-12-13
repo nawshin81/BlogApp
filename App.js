@@ -11,6 +11,7 @@ import SignInScreen from "./src/screens/SignInScreen";
 import ProfileScreen from "./src/screens/ProfileScreen";
 import CommentScreen from "./src/screens/CommentScreen";
 import { AuthContext, AuthProvider } from "./src/providers/AuthProvider";
+import * as firebase from "firebase"
 
 const AuthStack = createStackNavigator();
 const CommentStack = createStackNavigator();
@@ -18,6 +19,19 @@ const HomeTab = createMaterialBottomTabNavigator();
 const AppDrawer = createDrawerNavigator();
 import { Entypo, AntDesign, Ionicons } from "@expo/vector-icons";
 
+// Your web app's Firebase configuration
+var firebaseConfig = {
+  apiKey: "AIzaSyAr9wqT1jRbXE9PtRo8wb5CtCKEo0AVrcE",
+  authDomain: "blog-6617a.firebaseapp.com",
+  projectId: "blog-6617a",
+  storageBucket: "blog-6617a.appspot.com",
+  messagingSenderId: "137615841345",
+  appId: "1:137615841345:web:2e268350e9156710fd4ec0"
+};
+// Initialize Firebase
+if(!firebase.apps.length){
+firebase.initializeApp(firebaseConfig);
+}
 const AppDrawerScreen = () => {
   return (
     <AppDrawer.Navigator>
