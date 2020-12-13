@@ -1,17 +1,15 @@
 import React, { useState } from "react";
 import { Card, Button, Input } from "react-native-elements";
 import { MaterialCommunityIcons} from "@expo/vector-icons";
-import moment from "moment";
-import { storeDataJSON} from "../functions/AsyncStorageFunctions";
-
-function CurrentDate() {
-  var date = new moment().format("DD/MM/YYYY");
-  return date;
-}
+import * as firebase from "firebase";
+import "firebase/firestore";
+import { auth } from "firebase";
+import Loading from '../components/Loading';
 
 const NewPost = ({ user }) => {
-  const input = React.createRef();
-  const [postBody, setpostBody] = useState("");
+  const clearinput = React.createRef();
+  const[input,setInput]=useState("");
+  const [loading, setloading] = useState(false);
   return (
     <Card>
       <Input
@@ -20,25 +18,35 @@ const NewPost = ({ user }) => {
           <MaterialCommunityIcons name="lead-pencil" size={24} color="black" />
         }
         onChangeText={function (currentInput) {
-          setpostBody(currentInput);
+          setInput(currentInput);
         }}
-        ref={input}
+        ref={clearinput}
         multiline={true}
       />
       <Button
         title="Post"
         type="outline"
         onPress={function () {
-          var id = Math.floor(Math.random() * 200);
-          let currentPost = {
-            author: user.name,
-            date: CurrentDate(),
-            post: postBody,
-            id: "postId" + id,
-          };
-          storeDataJSON("postId"+id,currentPost)
-          setpostBody("")
-          input.current.clear();
+          setloading(true)
+          firebase.firestore()
+          .collection('posts')
+          .add({
+            userId:user.uid,
+            body:input,
+            author:user.displayName,
+            created_at:firebase.firestore.Timestamp.now(),
+            likes:[],
+            comments:[],
+          })
+          .then(()=>{
+            setloading(false)
+            alert("Post created successfully")
+            //clearinput.current.clear();
+          })
+          .catch((error)=>{
+            setloading(false)
+            alert(error);
+          })
         }}
 
       />

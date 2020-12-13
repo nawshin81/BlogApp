@@ -4,7 +4,7 @@ import { Card, Button, Text, Avatar } from "react-native-elements";
 
 import { AntDesign } from "@expo/vector-icons";
 
-const PostCard = ({content,props}) => {
+const PostCard = (props) => {
   return (
     <Card>
       <View
@@ -20,12 +20,12 @@ const PostCard = ({content,props}) => {
           activeOpacity={1}
         />
         <Text h4Style={{ padding: 10 }} h4>
-          {content.author}
+          {props.author}
         </Text>
       </View>
-      <Text style={{ fontStyle: "italic" }}>{content.date}</Text>
+      <Text style={{ fontStyle: "italic" }}>{props.title}</Text>
       <Text style={{paddingVertical: 10,fontSize:20}}>
-        {content.post}
+        {props.body}
       </Text>
       <Card.Divider />
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
@@ -36,7 +36,7 @@ const PostCard = ({content,props}) => {
         />
         <Button type="solid" title="Comment"
         onPress={function (){
-          let postId=content.id
+          let postId=props.title
           props.navigation.navigate("Comment",postId)
         }}
          />

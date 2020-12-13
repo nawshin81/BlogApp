@@ -9,30 +9,40 @@ import { AuthContext } from "../providers/AuthProvider";
 import HeaderHome from "../components/HeaderHome";
 import PostCard from "../components/PostCard";
 import NewPost from "../components/NewPost";
-import {getDataJSON } from "../functions/AsyncStorageFunctions";
+import * as firebase from "firebase";
+import "firebase/firestore";
 
 const HomeScreen = (props) => {
-  const [allposts, setallposts] = useState([]);
-  const getPosts = async () => {
-    let keys = await AsyncStorage.getAllKeys();
-    let posts = [];
-    if (keys != null) {
-      for (let key of keys) {
-        if(key.startsWith("postId")){
-          let post = await getDataJSON(key);
-          posts.push(post);
-        } 
-      }
-      setallposts(posts);
-    }
-    else{
-      console.log('No keys')
-    }
+  const [posts, setposts] = useState([]);
+  const [loading, setloading] = useState(false);
+  const loadPosts = async () => {
+    setloading(true);
+    firebase
+      .firestore()
+      .collection("posts")
+      .orderBy("created_at","desc")
+      .onSnapshot((querySnapShot) => {
+        let temp_posts = [];
+        querySnapShot.forEach((doc) => {
+          temp_posts.push({
+            id: doc.id,
+            data: doc.data(),
+          });
+        });
+        setposts(temp_posts);
+        setloading(false);
+      })
+      .catch((error) => {
+        setloading(false);
+        alert(error);
+      });
+    
   };
-  useEffect(() => {
-    getPosts();
-  }, []);
 
+  useEffect(() => {
+    loadPosts();
+  }, []);
+  
   return (
     <AuthContext.Consumer>
       {(auth) => (
@@ -41,11 +51,13 @@ const HomeScreen = (props) => {
 
           <NewPost user={auth.CurrentUser} />
           <FlatList
-            data={allposts}
+            data={posts}
             renderItem={function ({ item }) {
-              return (<PostCard  
-                content={item}
-                props={props} 
+              //console.log({item})
+              return (<PostCard   
+                author={item.data.author}
+                title={item.id}
+                body={item.data.body}
                 />);
             }}
             keyExtractor={(item, index) => index.toString()}
