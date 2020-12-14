@@ -37,7 +37,7 @@ const PostCard = (props) => {
         <Button type="solid" title="Comment"
         onPress={function (){
           let postId=props.title
-          props.navigation.navigate("Comment",postId)
+          props.navigation.navigate("Comment",{post:postId})
         }}
          />
       </View>

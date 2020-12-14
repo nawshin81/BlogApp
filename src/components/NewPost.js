@@ -3,8 +3,6 @@ import { Card, Button, Input } from "react-native-elements";
 import { MaterialCommunityIcons} from "@expo/vector-icons";
 import * as firebase from "firebase";
 import "firebase/firestore";
-import { auth } from "firebase";
-import Loading from '../components/Loading';
 
 const NewPost = ({ user }) => {
   const clearinput = React.createRef();

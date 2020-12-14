@@ -4,6 +4,7 @@ import {
   View,
   FlatList,
   AsyncStorage,
+  ActivityIndicator,
 } from "react-native";
 import { AuthContext } from "../providers/AuthProvider";
 import HeaderHome from "../components/HeaderHome";
@@ -15,12 +16,13 @@ import "firebase/firestore";
 const HomeScreen = (props) => {
   const [posts, setposts] = useState([]);
   const [loading, setloading] = useState(false);
+
   const loadPosts = async () => {
     setloading(true);
     firebase
       .firestore()
       .collection("posts")
-      .orderBy("created_at","desc")
+      .orderBy("created_at", "desc")
       .onSnapshot((querySnapShot) => {
         let temp_posts = [];
         querySnapShot.forEach((doc) => {
@@ -31,18 +33,17 @@ const HomeScreen = (props) => {
         });
         setposts(temp_posts);
         setloading(false);
-      })
-      .catch((error) => {
+      }),
+      (error) => {
         setloading(false);
         alert(error);
-      });
-    
+      };
   };
 
   useEffect(() => {
     loadPosts();
   }, []);
-  
+
   return (
     <AuthContext.Consumer>
       {(auth) => (
@@ -53,13 +54,19 @@ const HomeScreen = (props) => {
           <FlatList
             data={posts}
             renderItem={function ({ item }) {
-              //console.log({item})
-              return (<PostCard   
-                author={item.data.author}
-                title={item.id}
-                body={item.data.body}
-                navigation={props.navigation}
-                />);
+              
+              if (loading) {
+                <ActivityIndicator size="large" color="red" animating={true} />;
+              } else {
+                return (
+                  <PostCard
+                    author={item.data.author}
+                    title={item.id}
+                    body={item.data.body}
+                    navigation={props.navigation}
+                  />
+                );
+              }
             }}
             keyExtractor={(item, index) => index.toString()}
           />

@@ -30,9 +30,9 @@ const NewComment = ({ postDetails, postId, user }) => {
                     receiver: postDetails.author,
                   })
                   .then(() => {})
-                  .catch((error) => {
+                  ,(error) => {
                     alert(error);
-                  });
+                  }
                 setcomment("");
                 input.current.clear();
               }}

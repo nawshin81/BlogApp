@@ -22,13 +22,13 @@ const CommentScreen = ({ navigation, route }) => {
     .then(function(doc) {
       if (doc.exists) {
         setpostDetails(doc.data())
-         console.log(doc.data());
+         //console.log(doc.data());
       } else {
-          console.log("No such post!");
+          alert("No such post!");
       }
-  }).catch(function(error) {
-      console.log(error);
-  });
+  }),function(error) {
+    alert(error);
+}
   };
 //console.log(postDetails);
   const getComments = async () => {
@@ -95,9 +95,7 @@ const CommentScreen = ({ navigation, route }) => {
                 return(
                 <CommentCard 
               content={item.data}/>)
-              }
-              
-            
+              }  
           }}
           keyExtractor={(item, index) => index.toString()}
           />

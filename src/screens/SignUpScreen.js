@@ -79,15 +79,15 @@ const SignUpScreen = (props) => {
                       console.log(userCreds.user);
                       props.navigation.navigate("SignIn");
                     })
-                    .catch((error) => {
+                    ,(error) => {
                       setIsLoading(false);
                       alert(error);
-                    });
+                    }
                 })
-                .catch((error) => {
+                ,(error) => {
                   setIsLoading(false);
                   alert(error);
-                });
+                }
             } else {
               alert("Fields can't left empty");
             }

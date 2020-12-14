@@ -29,7 +29,7 @@ const NotificationScreen = (props) => {
                 alignContent: "center",
               }}
             >
-              {auth.CurrentUser.name}
+              {auth.CurrentUser.displayName}
             </Text>
           </View>
           <View style={{alignSelf:'flex-start'}}>

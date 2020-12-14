@@ -30,9 +30,9 @@ const HeaderHome = (props) => {
                   auth.setIsLoggedIn(false);
                   auth.setCurrentUser({});
                 })
-                .catch((error) => {
+                ,(error) => {
                   alert(error);
-                });
+                }
             },
           }}
         />

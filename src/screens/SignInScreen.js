@@ -51,10 +51,10 @@ const SignInScreen = (props) => {
                     auth.setIsLoggedIn(true);
                     auth.setCurrentUser(userCreds.user);
                   })
-                  .catch((error) => {
+                  ,(error) => {
                     setIsLoading(false);
                     alert(error);
-                  });
+                  }
               }}
               
             />
