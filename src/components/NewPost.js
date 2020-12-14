@@ -38,7 +38,7 @@ const NewPost = ({ user }) => {
           })
           .then((doc)=>{
             setloading(false)
-            alert(doc.id)
+            alert('postId: '+doc.id)
           }),(error)=>{
             setloading(false)
             alert(error);
